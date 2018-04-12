@@ -12,6 +12,7 @@ Location syntax
 // loc == "" returns the message
 // loc == "MSH" returns the MSH segment
 // loc == "MSH.2" returns the second field of the MSH segment
+// loc == "PID.5#2" returns the second repetion of the fifth field
 // etc
 
 **/
@@ -20,6 +21,7 @@ Location syntax
 type Location struct {
 	Segment  string
 	FieldSeq int
+	FieldRep int //field repetition number
 	Comp     int
 	SubComp  int
 }
@@ -27,13 +29,20 @@ type Location struct {
 // NewLocation creates a Location struct based on location string syntax
 func NewLocation(l string) *Location {
 	la := strings.Split(l, ".")
-	loc := Location{FieldSeq: -1, Comp: -1, SubComp: -1}
+	loc := Location{FieldSeq: -1, FieldRep: -1, Comp: -1, SubComp: -1}
 	lenLA := len(la)
 	if lenLA > 0 {
 		loc.Segment = la[0]
 	}
 	if lenLA > 1 {
-		if i, err := strconv.Atoi(la[1]); err == nil {
+		fl := strings.Split(la[1], "#")
+		lenFl := len(fl)
+		if lenFl > 1 {
+			if i, err := strconv.Atoi(fl[1]); err == nil {
+				loc.FieldRep = i
+			}
+		}
+		if i, err := strconv.Atoi(fl[0]); err == nil {
 			loc.FieldSeq = i
 		}
 	}

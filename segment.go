@@ -100,13 +100,24 @@ func (s *Segment) encode(seps *Delimeters) []byte {
 }
 
 // Field returns the field with sequence number i
-func (s *Segment) Field(i int) (*Field, error) {
-	for idx, fld := range s.Fields {
-		if fld.SeqNum == i {
-			return &s.Fields[idx], nil
-		}
+func (s *Segment) Field(i int, r int) (*Field, error) {
+	rep := 1
+	if r > 1 {
+		rep = r
+	}
+	rep--
+	flds, err := s.AllFields(i)
+	if err == nil {
+		return flds[rep], nil
 	}
 	return nil, fmt.Errorf("Field not found")
+	/*
+		for idx, fld := range s.Fields {
+			if fld.SeqNum == i {
+				return &s.Fields[idx], nil
+			}
+		}*/
+	//return nil, fmt.Errorf("Field not found")
 }
 
 // AllFields returns all fields with sequence number i
@@ -128,7 +139,7 @@ func (s *Segment) Get(l *Location) (string, error) {
 	if l.FieldSeq == -1 {
 		return string(s.Value), nil
 	}
-	fld, err := s.Field(l.FieldSeq)
+	fld, err := s.Field(l.FieldSeq, l.FieldRep)
 	if err != nil {
 		return "", err
 	}
@@ -166,7 +177,8 @@ func (s *Segment) Set(l *Location, val string, seps *Delimeters) error {
 			s.forceField([]byte(""), i)
 		}
 	}
-	fld, err := s.Field(l.FieldSeq)
+
+	fld, err := s.Field(l.FieldSeq, l.FieldRep)
 	if err != nil {
 		return err
 	}

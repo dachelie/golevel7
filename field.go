@@ -14,6 +14,7 @@ type Field struct {
 
 func (f *Field) String() string {
 	var str string
+	str += "Seq Num :" + fmt.Sprintf("%d", f.SeqNum) + "\n"
 	for _, c := range f.Components {
 		str += "Field Component: " + string(c.Value) + "\n"
 		str += c.String()
@@ -82,6 +83,7 @@ func (f *Field) Set(l *Location, val string, seps *Delimeters) error {
 	if loc < 0 {
 		loc = 0
 	}
+	fmt.Printf("\n loc field %d \n", loc)
 	if x := loc - len(f.Components) + 1; x > 0 {
 		f.Components = append(f.Components, make([]Component, x)...)
 	}

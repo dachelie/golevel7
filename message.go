@@ -35,7 +35,7 @@ func (m *Message) String() string {
 // Segment returns the first matching segmane with name s
 func (m *Message) Segment(s string) (*Segment, error) {
 	for i, seg := range m.Segments {
-		fld, err := seg.Field(0)
+		fld, err := seg.Field(0, -1)
 		if err != nil {
 			continue
 		}
@@ -50,7 +50,7 @@ func (m *Message) Segment(s string) (*Segment, error) {
 func (m *Message) AllSegments(s string) ([]*Segment, error) {
 	segs := []*Segment{}
 	for i, seg := range m.Segments {
-		fld, err := seg.Field(0)
+		fld, err := seg.Field(0, -1)
 		if err != nil {
 			continue
 		}
@@ -157,6 +157,10 @@ func (m *Message) parse() error {
 			m.Segments = append(m.Segments, seg)
 			i = ii
 		case ch == m.Delimeters.Escape:
+			ii++
+			r.ReadRune()
+		case ch == '\x0A' && i == ii-1: // Ignore LF added after CR
+			i++
 			ii++
 			r.ReadRune()
 		}
