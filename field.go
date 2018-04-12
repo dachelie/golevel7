@@ -83,7 +83,6 @@ func (f *Field) Set(l *Location, val string, seps *Delimeters) error {
 	if loc < 0 {
 		loc = 0
 	}
-	fmt.Printf("\n loc field %d \n", loc)
 	if x := loc - len(f.Components) + 1; x > 0 {
 		f.Components = append(f.Components, make([]Component, x)...)
 	}

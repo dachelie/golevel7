@@ -93,8 +93,32 @@ func (s *Segment) forceField(val []byte, seq int) {
 
 func (s *Segment) encode(seps *Delimeters) []byte {
 	buf := [][]byte{}
-	for _, f := range s.Fields {
-		buf = append(buf, f.Value)
+	flda := [][]byte{}
+	for i, f := range s.Fields {
+		if i < len(s.Fields)-1 {
+			if s.Fields[i+1].SeqNum == f.SeqNum {
+				flda = append(flda, f.Value)
+			} else {
+				flda = append(flda, f.Value)
+				if len(flda) > 1 {
+					buf = append(buf, bytes.Join(flda, []byte(string(seps.Repetition))))
+				} else {
+					buf = append(buf, f.Value)
+				}
+				flda = [][]byte{}
+
+			}
+
+		} else {
+			flda = append(flda, f.Value)
+			if len(flda) > 1 {
+				buf = append(buf, bytes.Join(flda, []byte(string(seps.Repetition))))
+			} else {
+				buf = append(buf, f.Value)
+			}
+			flda = [][]byte{}
+		}
+
 	}
 	return bytes.Join(buf, []byte(string(seps.Field)))
 }

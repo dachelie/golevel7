@@ -152,7 +152,7 @@ func (m *Message) parse() error {
 			}
 			return nil
 		case ch == segTerm:
-			seg := Segment{Value: m.Value[i:ii]}
+			seg := Segment{Value: m.Value[i : ii-1]}
 			seg.parse(&m.Delimeters)
 			m.Segments = append(m.Segments, seg)
 			i = ii
@@ -207,6 +207,11 @@ func (m *Message) encode() []byte {
 		buf = append(buf, s.Value)
 	}
 	return bytes.Join(buf, []byte(string(segTerm)))
+}
+
+//Export give string of the message
+func (m *Message) Export() string {
+	return string(m.encode())
 }
 
 // IsValid checks a message for validity based on a set of criteria
