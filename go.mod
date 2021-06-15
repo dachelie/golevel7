@@ -1,4 +1,4 @@
-module github.dachelie.golevel7
+module github.com/dachelie/golevel7
 
 go 1.12
 
