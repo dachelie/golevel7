@@ -8,13 +8,13 @@ func TestFind(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	msg := &Message{Value: data}
+	msg := &Message{Value: []rune(string(data))}
 	msg.parse()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	val, err := msg.Find("OBR.4.2")
+	val, err := msg.Find("OBR.4.3")
 	if err != nil {
 		t.Error(err)
 	}
@@ -22,7 +22,7 @@ func TestFind(t *testing.T) {
 		t.Errorf("Expected CPT-4 got %s\n", val)
 	}
 
-	val, err = msg.Find("OBX.3.2")
+	val, err = msg.Find("OBX.3.3")
 	if err != nil {
 		t.Error(err)
 	}
@@ -37,7 +37,7 @@ func TestFindAll(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	msg := &Message{Value: data}
+	msg := &Message{Value: []rune(string(data))}
 	msg.parse()
 	if err != nil {
 		t.Fatal(err)
@@ -71,13 +71,13 @@ func TestRepFields(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	msg := &Message{Value: data}
+	msg := &Message{Value: []rune(string(data))}
 	msg.parse()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	vals, err := msg.FindAll("PID.11.0")
+	vals, err := msg.FindAll("PID.11.3")
 	if err != nil {
 		t.Error(err)
 	}

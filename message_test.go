@@ -1,6 +1,8 @@
 package golevel7
 
 import (
+	"golang.org/x/net/html/charset"
+	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -12,10 +14,16 @@ func readFile(fname string) ([]byte, error) {
 	}
 	defer file.Close()
 
-	data := make([]byte, 1024)
-	if _, err = file.Read(data); err != nil {
+	reader, err := charset.NewReader(file, "text/plain")
+	if err != nil {
 		return nil, err
 	}
+
+	data, err := ioutil.ReadAll(reader)
+	if err != nil {
+		return nil, err
+	}
+
 	return data, nil
 }
 
@@ -25,7 +33,7 @@ func TestMessage(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	msg := &Message{Value: data}
+	msg := &Message{Value: []rune(string(data))}
 	msg.parse()
 	if err != nil {
 		t.Error(err)
@@ -38,7 +46,7 @@ func TestMessage(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	msg = &Message{Value: data}
+	msg = &Message{Value: []rune(string(data))}
 	msg.parse()
 	if err != nil {
 		t.Error(err)
@@ -51,7 +59,7 @@ func TestMessage(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	msg = &Message{Value: data}
+	msg = &Message{Value: []rune(string(data))}
 	msg.parse()
 	if err != nil {
 		t.Error(err)
@@ -64,7 +72,7 @@ func TestMessage(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	msg = &Message{Value: data}
+	msg = &Message{Value: []rune(string(data))}
 	msg.parse()
 	if err != nil {
 		t.Error(err)
